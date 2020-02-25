@@ -13,7 +13,10 @@ class Upload extends Component {
 	delimiter: "",
     description: "",
     token: "",
-    fileMeta: []
+    fileMeta: [],
+	isStructured: "Yes",
+	miningType: "Clustering"
+
   };
 
   componentDidMount() {
@@ -29,30 +32,42 @@ class Upload extends Component {
   };
 
   uploadFile = () => {
-    const { delimiter, description, hasHeader, miningType } = this.state;
-    const file = this.uploadInput.files[0];
+    const { delimiter, description, isStructured, miningType } = this.state;
+    const files = this.uploadInput.files;
     const data = new FormData();
-    data.append("file", file);
-	data.append("delimiter", delimiter);
-    data.append("description", description);
-	data.append("hasHeader", hasHeader);
-    data.append("miningType", miningType);
-    // this.props.getData(uploadTest);
-    // this.props.changeDisplay();
-    console.log(file);
-    fetch(`${baseUrl}/upload`, {
-      method: "POST",
-      body: data
-    })
-      .then(response => response.json())
-      .then(data => {
-        const { filename: token } = data;
-        // alert(JSON.stringify(data));
-        this.setState({ token });
-        ls.set("token", token);
-      })
-      // .then(() => this.getFileButton.click())
-      .catch(err => console.log(err));
+	if (files.length == 0)  {
+		alert("Please upload atleast 1 file.")
+	} else {
+		if (files.length == 1 && isStructured == "Yes") {
+			const file = files[0];
+			data.append("file", file);
+			data.append("delimiter", delimiter);
+		} else {
+			for (var i=0; i<files.length; i++) {
+				var key = "file"+i;
+				data.append(key, files[i]);
+			}
+		}
+		data.append("isStructured", isStructured);
+		data.append("description", description);
+		data.append("miningType", miningType);
+		// this.props.getData(uploadTest);
+		// this.props.changeDisplay();
+		console.log(files);
+		fetch(`${baseUrl}/upload`, {
+		  method: "POST",
+		  body: data
+		})
+		  .then(response => response.json())
+		  .then(data => {
+			const { filename: token } = data;
+			// alert(JSON.stringify(data));
+			this.setState({ token });
+			ls.set("token", token);
+		  })
+		  // .then(() => this.getFileButton.click())
+		  .catch(err => console.log(err));
+	  }
   };
 
   async getFileFromToken() {
@@ -112,14 +127,15 @@ class Upload extends Component {
               ref={ref => {
                 this.uploadInput = ref;
               }}
+			  multiple
             />
           </div>
 
 		  <div>
-            File has labeled columns?
+            File/s structured?
           
 			<select
-              onChange={e => this.setState({ hasHeader: e.target.value })}
+              onChange={e => this.setState({ isStructured: e.target.value })}
             >
               <option>Yes</option>
               <option>No</option>

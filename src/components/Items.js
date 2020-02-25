@@ -43,7 +43,7 @@ class Items extends Component {
           }}
           onClick={e => this.changeButtonColorAndChangeDisplay("csvUpload")}
         >
-          Upload Structured File
+          Upload File
         </div>
         <div id="displayContent"
           style={{
