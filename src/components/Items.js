@@ -43,7 +43,22 @@ class Items extends Component {
           }}
           onClick={e => this.changeButtonColorAndChangeDisplay("csvUpload")}
         >
-          Upload File
+          Upload Structured File
+        </div>
+		<div id="uploadUnstructured"
+          style={{
+            backgroundColor: "#3b5998",
+            width: "100%",
+            marginBottom: "20px",
+            cursor: "pointer",
+            textAlign: "center",
+
+            paddingTop: "5px",
+            paddingBottom: "5px"
+          }}
+          onClick={e => this.changeButtonColorAndChangeDisplay("uploadUnstructured")}
+        >
+          Upload Unstructured File
         </div>
         <div id="displayContent"
           style={{

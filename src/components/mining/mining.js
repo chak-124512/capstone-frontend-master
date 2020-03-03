@@ -30,7 +30,8 @@ class Mining extends Component {
       modalShow: false,
       modalTopic: "RF",
       modalContent: "Explanation of Random Forest",
-      n_clusters: 2
+      n_clusters: 2,
+	  n_topics: 0
     };
 
     this.selectEvalutionModel = this.selectEvalutionModel.bind(this);
@@ -52,7 +53,9 @@ class Mining extends Component {
         { id: "SVM", name: "Support Vector Machine" },
         { id: "KNN", name: "K-Nearest Neighbor" },
         { id: "MP", name: "Multilayer Perceptron" },
-        { id: "HC", name: "Hierarchical Clustering" }
+        { id: "HC", name: "Hierarchical Clustering" },
+		{ id: "TM", name: "Topic Modeling" },
+		{ id: "WE", name: "Word Embedding" }
       ]
     });
     var checker = [];
@@ -209,7 +212,24 @@ class Mining extends Component {
           this.setState({ images });
         })
         .catch(err => console.log(err));
-    }
+    } else if (this.state.selectedModel == "TM") {
+		const data = new FormData();
+      data.append("fileKey", fileKey);
+      data.append("n_topics", this.state.n_topics);
+      const url = `${baseUrl}/topic-modeling`;
+      fetch(url, {
+        method: "POST",
+        body: data
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log("getting data", data.html_filename);
+		  this.setState({ modalContent: data.html_filename });
+		  this.setState({ modalTopic: "TM" });
+		  this.setState({ modalShow: true });
+        })
+        .catch(err => console.log(err));
+	}
     // console.log("images we have", images);
     this.setState({ images });
   }
@@ -334,6 +354,23 @@ class Mining extends Component {
         </Container>
       );
     }
+
+	if (this.state.selectedModel === "TM") {
+      console.log("inside TM");
+      return (
+        <Container style={{ marginTop: "15px" }}>
+          <Row>
+            <Col>Enter the number of topics you want to get:</Col>
+            <Col>
+              <input
+                type="text"
+                onChange={e => this.setState({ n_topics: e.target.value })}
+              />
+            </Col>
+          </Row>
+        </Container>
+      );
+    }
   }
 
   render() {
@@ -392,6 +429,13 @@ class Mining extends Component {
                 Help!
               </button>
             </Col>
+			<Col style={{ marginLeft: 90 }}>
+              <input
+                type="button"
+                value="submit"
+                onClick={() => this.submitData()}
+              />
+            </Col>
             <Col>
               <select onChange={this.selectModel}>{modelList}</select>
               {this.renderElement()}
@@ -413,15 +457,6 @@ class Mining extends Component {
                   </Col>
                 </Row>
               ))}
-            </Col>
-          </Row>
-          <Row>
-            <Col style={{ marginLeft: 90 }}>
-              <input
-                type="button"
-                value="submit"
-                onClick={() => this.submitData()}
-              />
             </Col>
           </Row>
         </Container>
@@ -495,7 +530,6 @@ class Mining extends Component {
               disabled={true}
               config={{ toolbar: [] }}
             />
-            {/* {renderHTML(this.state.modalContent)} */}
           </Modal.Body>
           <Modal.Footer>
             <Button

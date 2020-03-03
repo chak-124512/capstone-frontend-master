@@ -1,49 +1,33 @@
 import React, { Component } from "react";
 import { getData, setToken } from "../actions/index";
 import { connect } from "react-redux";
-import { uploadTest } from "./testData";
-import { fileMetaData } from "./fileMeta";
 import ls from "local-storage";
 import { baseUrl } from "../../shared/baseUrl";
 import { Button } from 'react-bootstrap'
 import Items from "../Items"
 
-class Upload extends Component {
+class Upload2 extends Component {
   state = {
 	delimiter: "",
     description: "",
     token: "",
     fileMeta: [],
-	isStructured: "Yes",
-	miningType: "Clustering"
-
+	isStructured: "No"
   };
-
-  componentDidMount() {
-    this.props.updateStateRef(this);
-    const url = `${baseUrl}/sample-files`;
-    fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        this.setState({ fileMeta: data });
-      })
-      // .then(() => this.getFileButton.click())
-      .catch(err => console.log(err));
-  };
-
+  
   uploadFile = () => {
-    const { delimiter, description, isStructured, miningType } = this.state;
+    const { description, isStructured, miningType } = this.state;
     const files = this.uploadInput.files;
     const data = new FormData();
 	if (files.length == 0)  {
-		alert("Please upload a file.")
+		alert("Please upload atleast 1 file.")
 	} else {
-		const file = files[0];
-		data.append("file", file);
-		data.append("delimiter", delimiter);
+			for (var i=0; i<files.length; i++) {
+				var key = "file"+i;
+				data.append(key, files[i]);
+			}
 		data.append("isStructured", isStructured);
 		data.append("description", description);
-		data.append("miningType", miningType);
 		// this.props.getData(uploadTest);
 		// this.props.changeDisplay();
 		console.log(files);
@@ -91,7 +75,7 @@ class Upload extends Component {
     this.props.getData(rowData, cols);
 	
 	// change button color of Upload File button since app navigates to Display Data page
-	document.getElementById("csvUpload").style.backgroundColor = "#3b5998";	
+	document.getElementById("uploadUnstructured").style.backgroundColor = "#3b5998";	
 
 	// change button color of Display Content button since app navigates to Display Data page
 	document.getElementById("displayContent").style.backgroundColor = "#61ddff";	
@@ -99,20 +83,19 @@ class Upload extends Component {
 
     this.props.changeDisplay();
   }
-
-  render() {
+	 render() {
     return (
       <React.Fragment>
-        <div
+		 <div
           style={{
             align: "center",
             marginLeft: "20%",
             marginTop: "10px",
           }}
         >
-          <div style={{}}>
+		<div style={{}}>
             <h3>
-              <u>Upload a Structured File</u>
+              <u>Upload 1 or more Unstructured Files</u>
             </h3>
             <input
               style={{ marginLeft: "20px", marginBottom: "20px" }}
@@ -120,20 +103,8 @@ class Upload extends Component {
               ref={ref => {
                 this.uploadInput = ref;
               }}
+			  multiple
             />
-          </div>
-
-		  <br/>
-		    <div>
-            Delimiter(Optional):
-          
-			<input
-			  type="text"
-              value={this.state.delimiter}
-			  size="2"
-              onChange={e => this.setState({ delimiter: e.target.value })}
-            />
-
 		  </div>
 
           <br />
@@ -148,18 +119,6 @@ class Upload extends Component {
             ></textarea>
 			</div>
             
-			<br />
-			<div>
-			<p>Choose Data Mining Type:</p>
-            <select
-              onChange={e => this.setState({ miningType: e.target.value })}
-            >
-              <option>Clustering</option>
-              <option>Classification</option>
-              <option>Regression</option>
-            </select>
-			</div>
-
           <br />
           <div>
             <Button
@@ -225,5 +184,5 @@ class Upload extends Component {
 }
 
 export default connect(null, { getData, setToken }, null, { forwardRef: true })(
-  Upload
+  Upload2
 );

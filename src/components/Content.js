@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import renderIf from "render-if";
 import Upload from "./upload";
+import Upload2 from "./upload2";
 import Display from "./display";
 import PreProcessing from "./display/PreProcessing";
 import Visualization from "./visualization";
@@ -28,6 +29,7 @@ class Content extends Component {
     const { display } = this.props;
     console.log("dis", display);
     const renderCsvUpload = renderIf(display === "csvUpload");
+	const renderUploadUnstructured = renderIf(display === "uploadUnstructured");
     const renderDisplay = renderIf(display === "displayContent");
     const renderPreProcessing = renderIf(display === "preProcessing");
     const renderVisualization = renderIf(display === "visualization");
@@ -43,6 +45,11 @@ class Content extends Component {
           <Upload
             changeDisplay={this.props.changeDisplay}
             updateStateRef={e => this.setState({ uploadRef: e })}
+          />
+        )}
+		{renderUploadUnstructured(
+          <Upload2
+            changeDisplay={this.props.changeDisplay}
           />
         )}
         {renderDisplay(

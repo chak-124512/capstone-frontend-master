@@ -3,9 +3,9 @@
     "",
     "\\src",
     "\\src\\components",
-    "\\src\\components\\display",
-    "\\src\\components\\upload"
+    "\\src\\components\\upload",
+    "\\src\\components\\upload2"
   ],
-  "SelectedNode": "\\src\\components\\upload\\Upload.js",
+  "SelectedNode": "\\src\\components\\upload\\fileMeta.js",
   "PreviewInSolutionExplorer": false
 }
