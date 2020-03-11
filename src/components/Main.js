@@ -5,7 +5,7 @@ import Items from "./Items";
 import Content from "./Content";
 class Main extends Component {
   state = {
-    display: "csvUpload"
+    display: "uploadUnstructured"
   };
   changeDisplay = e => {
     this.setState({ display: e });

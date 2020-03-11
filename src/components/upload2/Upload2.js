@@ -14,6 +14,19 @@ class Upload2 extends Component {
     fileMeta: [],
 	isStructured: "No"
   };
+
+   componentDidMount() {
+    this.props.updateStateRef(this);
+    const url = `${baseUrl}/sample-files`;
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        this.setState({ fileMeta: data });
+      })
+      // .then(() => this.getFileButton.click())
+      .catch(err => console.log(err));
+  };
+
   
   uploadFile = () => {
     const { description, isStructured, miningType } = this.state;

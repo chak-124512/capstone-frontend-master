@@ -53,9 +53,7 @@ class Mining extends Component {
         { id: "SVM", name: "Support Vector Machine" },
         { id: "KNN", name: "K-Nearest Neighbor" },
         { id: "MP", name: "Multilayer Perceptron" },
-        { id: "HC", name: "Hierarchical Clustering" },
-		{ id: "TM", name: "Topic Modeling" },
-		{ id: "WE", name: "Word Embedding" }
+        { id: "HC", name: "Hierarchical Clustering" }
       ]
     });
     var checker = [];
@@ -129,7 +127,9 @@ class Mining extends Component {
         required_columns.push(column);
       }
     });
-    if (this.state.selectedModel == "RF") {
+	if (this.state.selectedModel == "") {
+		alert("Please choose a model first among the options");
+	} else if (this.state.selectedModel == "RF") {
       console.log("n esti", this.state.n_estimator);
       console.log("depth", this.state.max_depth);
       const data = new FormData();
@@ -212,29 +212,15 @@ class Mining extends Component {
           this.setState({ images });
         })
         .catch(err => console.log(err));
-    } else if (this.state.selectedModel == "TM") {
-		const data = new FormData();
-      data.append("fileKey", fileKey);
-      data.append("n_topics", this.state.n_topics);
-      const url = `${baseUrl}/topic-modeling`;
-      fetch(url, {
-        method: "POST",
-        body: data
-      })
-        .then(response => response.json())
-        .then(data => {
-          console.log("getting data", data.html_filename);
-		  this.setState({ modalContent: data.html_filename });
-		  this.setState({ modalTopic: "TM" });
-		  this.setState({ modalShow: true });
-        })
-        .catch(err => console.log(err));
-	}
+    }
     // console.log("images we have", images);
     this.setState({ images });
   }
   getModelInfo = () => {
     console.log("button clicked");
+	if (this.state.selectedModel == "") {
+		alert("Please choose a model first among the options");
+	} else {
     const topic = this.state.selectedModel;
     const url = `${baseUrl}/get-help`;
     const statics_url = `${baseUrl}/static/`;
@@ -258,6 +244,7 @@ class Mining extends Component {
         this.setState({ modalTopic: model_obj.name });
         this.setState({ modalShow: true });
       });
+	 }
   };
   renderElement() {
     console.log("vadfsdf", this.state.selectedModel);
@@ -354,23 +341,6 @@ class Mining extends Component {
         </Container>
       );
     }
-
-	if (this.state.selectedModel === "TM") {
-      console.log("inside TM");
-      return (
-        <Container style={{ marginTop: "15px" }}>
-          <Row>
-            <Col>Enter the number of topics you want to get:</Col>
-            <Col>
-              <input
-                type="text"
-                onChange={e => this.setState({ n_topics: e.target.value })}
-              />
-            </Col>
-          </Row>
-        </Container>
-      );
-    }
   }
 
   render() {
@@ -419,6 +389,22 @@ class Mining extends Component {
                 }
               />
             </Col>
+
+			<Col></Col>
+
+            <Col>
+              <select onChange={this.selectModel}>{modelList}</select>
+              {this.renderElement()}
+            </Col>
+
+			<Col style={{ marginLeft: 90 }}>
+              <input
+                type="button"
+                value="Generate Model"
+                onClick={() => this.submitData()}
+              />
+            </Col>
+
             <Col>
               <button
                 class="btn btn-info"
@@ -426,21 +412,11 @@ class Mining extends Component {
                 value="Help!"
                 onClick={() => this.getModelInfo()}
               >
-                Help!
+                Get Info about chosen model
               </button>
             </Col>
-			<Col style={{ marginLeft: 90 }}>
-              <input
-                type="button"
-                value="submit"
-                onClick={() => this.submitData()}
-              />
-            </Col>
-            <Col>
-              <select onChange={this.selectModel}>{modelList}</select>
-              {this.renderElement()}
-            </Col>
-            <Col>
+			
+			<Col>
               {cols.map((item, key) => (
                 <Row key={key}>
                   <Col sm={8}>

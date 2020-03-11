@@ -165,10 +165,10 @@ class InputForm extends Component {
             </select>
           </Col>
           <Col>
-            <Button onClick={() => this.getCharts()}>Generate</Button>
+            <Button onClick={() => this.getCharts()}>Generate visualization</Button>
           </Col>
           <Col>
-            <Button onClick={() => this.getHelp()}>Help!</Button>
+            <Button onClick={() => this.getHelp()}>Get info about chosen visualization</Button>
           </Col>
         </Row>
         <br />

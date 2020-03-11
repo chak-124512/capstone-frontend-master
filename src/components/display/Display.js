@@ -46,7 +46,7 @@ class Display extends Component {
     return (
       <div>
         <h4 style={{ textAlign: "center", padding: "-5px" }}>Data</h4>
-        <ReactTable data={data} columns={columns} />;
+        <ReactTable data={data} columns={columns} />
         <h4 style={{ textAlign: "center", padding: "-5px" }}>Statistics</h4>
         <ReactTable
           style={{ marginLeft: "15%", height: "200px" }}
