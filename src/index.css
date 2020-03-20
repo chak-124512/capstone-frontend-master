@@ -103,64 +103,11 @@ input:checked + .slider .off
   border-radius: 50%;}
 
 /*--------- END css for toggle --------*/
- 
-.flexbox {
-	display: flex;
-	justify-content: space-between;
-	width: 100%;
-	max-width: 1000px;
-	height: 100vh;
 
-	overflow:hidden;
-
-	margin: 0 auto;
-	padding: 15px;
-}
-
-.flexbox .board1 {
-	display: flex;
-	flex-direction: column;
-
-	width: 100%;
-	max-width: 700px;
-
-	height:10000px;
-
-	background-color: #FFFFFF;
-
-	padding: 15px;
-}
-
-.flexbox .board2 {
-	display: flex;
-	flex-direction: column;
-
-	width: 100%;
-	max-width: 200px;
-
-	height:10000px;
-
-
-	background-color: #313131;
-
-	padding: 15px;
-}
-
-
-.flexbox .board1 .card {
-	padding: 15px 25px;
-	background-color: #0000FF;
-	color: #FFFFFF;
-
-	cursor:pointer;
-	margin-bottom: 15px;
-}
-
-.flexbox .board2 .card {
-	padding: 15px 25px;
-	background-color: #0000FF;
-	color: #FFFFFF;
-
-	cursor:pointer;
-	margin-bottom: 15px;
-}
+/* CSS for workflow */
+ .diagram-component {
+    width: 650px;
+    height: 750px;
+    border: solid 1px black;
+    background-color: white;
+  }

@@ -4,18 +4,13 @@ import { ReactDiagram } from 'gojs-react';
 import { Container, Row, Col } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
-import CKEditor from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
-  class Workflow extends Component {
+  class Workflow4 extends Component {
 
  constructor(props) {
     super(props);
     this.state = {
-	  colors: ['lightblue', 'orange', 'lightgreen', 'pink'],
-	  modalShow: false,
-      modalTopic: "Upload Unstructured Files",
-      modalContent: "Upload 1 or more unstructured files"
+	  colors: ['lightblue', 'orange', 'lightgreen', 'pink']
     };
  }
   /**
@@ -53,7 +48,7 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
         ),
 		$("Button",
 			  { margin: 8,
-				click: this.setState({ modalShow: true })},$(go.TextBlock, "click")))
+				click: this.call },$(go.TextBlock, "click")))
       );
 
 	  /*if (this.props.nodeDataArray.length>0) {
@@ -69,10 +64,10 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 
   /*
-   * This function is used to call a modal window
+   * This function is used to call an alert
    */
    call() {
-        this.setState({ modalShow: true });
+	alert('Button clicked');
    }
 
      /**
@@ -100,9 +95,9 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 		  }
 		  this.props.onWorkflowDataChange(nodeDataArray, linkDataArray, currentNodeKey+1, currentLinkKey-1, y+150);
 		  if (currentNodeKey%2==0) {
-			this.props.changeDisplayToWorkflow2();
+			this.props.changeDisplayToWorkflow4();
 		  } else {
-		  	this.props.changeDisplayToWorkflow();
+		  	this.props.changeDisplayToWorkflow3();
 		  }
 		  
    }
@@ -123,7 +118,7 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 				<ReactDiagram
 				  initDiagram={() => this.initDiagram()}
 				  divClassName='diagram-component'
-				  nodeDataArray={this.props.nodeDataArray}
+				   nodeDataArray={this.props.nodeDataArray}
           linkDataArray={this.props.linkDataArray}
 				  onModelChange={() => this.handleModelChange}
 
@@ -132,53 +127,47 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 			</Col>
 			<Col xs="1" sm="1">
 			<p></p>
-			<Button onClick={() => this.addNodeToDiagram("Upload Unstructured Files")}>Upload Unstructured Files</Button>
+			<Button onClick={() => this.addNodeToDiagram("Upload Structured File")}>Upload Structured File</Button>
 			<p></p>
-			<Button onClick={() => this.addNodeToDiagram("Remove Stop Words")}>Remove Stop Words</Button>
+			<Button onClick={() => this.addNodeToDiagram("Remove Missing Values")}>Remove Missing Values</Button>
 			<p></p>
-			<Button onClick={() => this.addNodeToDiagram("Topic Modeling")}>Topic Modeling</Button>
+			<Button onClick={() => this.addNodeToDiagram("Remove Outside of Range")}>Remove Outside of Range</Button>
 			<p></p>
-			<Button onClick={() => this.addNodeToDiagram("Word Embedding")}>Word Embedding</Button>
-
+			<Button onClick={() => this.addNodeToDiagram("Replace NAN By Specific Value")}>Replace NAN By Specific Value</Button>
+			<p></p>
+			<Button onClick={() => this.addNodeToDiagram("Replace Specific Value")}>Replace Specific Value</Button>
+			<p></p>
+			<Button onClick={() => this.addNodeToDiagram("Replace Missing Values by Mean")}>Replace Missing Values by Mean</Button>
+			<p></p>
+			<Button onClick={() => this.addNodeToDiagram("Replace Missing Values by Median")}>Replace Missing Values by Median</Button>
+			<p></p>
+			<Button onClick={() => this.addNodeToDiagram("Generate Histogram")}>Generate Histogram</Button>
+			<p></p>
+			<Button onClick={() => this.addNodeToDiagram("Generate Correlation Matrix")}>Generate Correlation Matrix</Button>
+			<p></p>
+			<Button onClick={() => this.addNodeToDiagram("Generate Box Plot")}>Generate Box Plot</Button>
+			<p></p>
+			<Button onClick={() => this.addNodeToDiagram("Standard Scaling")}>Standard Scaling</Button>
+			<p></p>
+			<Button onClick={() => this.addNodeToDiagram("Min-Max Scaling")}>Min-Max Scaling</Button>
+			<p></p>
+			<Button onClick={() => this.addNodeToDiagram("Linear Regression")}>Linear Regression</Button>
+			<p></p>
+			<Button onClick={() => this.addNodeToDiagram("Random Forest")}>Random Forest</Button>
+			<p></p>
+			<Button onClick={() => this.addNodeToDiagram("Support Vector Machine")}>Support Vector Machine</Button>
+			<p></p>
+			<Button onClick={() => this.addNodeToDiagram("K-Nearest Neighbor")}>K-Nearest Neighbor</Button>
+			<p></p>
+			<Button onClick={() => this.addNodeToDiagram("Multilayer Perceptron")}>Multilayer Perceptron</Button>
+			<p></p>
+			<Button onClick={() => this.addNodeToDiagram("Hierarchial Clustering")}>Hierarchial Clustering</Button>
 			</Col>
 			</Row>
 	</Container>
-	 <Modal
-          show={this.state.modalShow}
-          onHide={e => this.setState({ modalShow: false })}
-        >
-          <Modal.Header closeButton>
-            <Modal.Title>{this.state.modalTopic}</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <CKEditor
-              editor={ClassicEditor}
-              data={this.state.modalContent}
-              disabled={true}
-              config={{ toolbar: [] }}
-            />
-			<input
-              style={{ marginLeft: "20px", marginBottom: "20px" }}
-              type="file"
-              ref={ref => {
-                this.uploadInput = ref;
-              }}
-			  multiple
-            />
-          </Modal.Body>
-          <Modal.Footer>
-            <Button
-              variant="secondary"
-              onClick={e => this.setState({ modalShow: false })}
-            >
-              Close
-            </Button>
-            <Button variant="primary">Save Changes</Button>
-          </Modal.Footer>
-        </Modal>
 </React.Fragment>
     );
   }
   }
 
-  export default Workflow;
+  export default Workflow4;

@@ -28,6 +28,8 @@ class Items extends Component {
 		document.getElementById("preProcessingUnstructured").style.display = "none";
 		document.getElementById("mining").style.display = "";
 		document.getElementById("miningUnstructured").style.display = "none";
+		document.getElementById("workflow3").style.display = "";
+		document.getElementById("workflow").style.display = "none";
 		// change from tabs that won't be visible in unstructured file view
 		if (this.state.currentDisplay=="uploadUnstructured") {
 			this.changeButtonColorAndChangeDisplay("csvUpload");
@@ -35,6 +37,8 @@ class Items extends Component {
 			this.changeButtonColorAndChangeDisplay("preProcessing");
 		} else if (this.state.currentDisplay=="miningUnstructured") {
 			this.changeButtonColorAndChangeDisplay("mining");
+		} else if (this.state.currentDisplay=="workflow" || this.state.currentDisplay=="workflow2") {
+			this.changeButtonColorAndChangeDisplay("workflow3");
 		}
 	} else {
 		// change from structured file view to unstuctured file view
@@ -45,6 +49,8 @@ class Items extends Component {
 		document.getElementById("preProcessingUnstructured").style.display = "";
 		document.getElementById("mining").style.display = "none";
 		document.getElementById("miningUnstructured").style.display = "";
+		document.getElementById("workflow3").style.display = "none";
+		document.getElementById("workflow").style.display = "";
 		// change from tabs that won't be visible in structured file view
 		if (this.state.currentDisplay=="csvUpload" || this.state.currentDisplay=="transformation") {
 			this.changeButtonColorAndChangeDisplay("uploadUnstructured");
@@ -52,6 +58,10 @@ class Items extends Component {
 			this.changeButtonColorAndChangeDisplay("preProcessingUnstructured");
 		} else if (this.state.currentDisplay=="mining") {
 			this.changeButtonColorAndChangeDisplay("miningUnstructured");
+		} else if (this.state.currentDisplay=="mining") {
+			this.changeButtonColorAndChangeDisplay("miningUnstructured");
+		} else if (this.state.currentDisplay=="workflow3" || this.state.currentDisplay=="workflow4") {
+			this.changeButtonColorAndChangeDisplay("workflow");
 		}
 	}
   };
@@ -61,7 +71,7 @@ class Items extends Component {
       <div
         style={{
           width: "15vw",
-          height: "110vh",
+          height: "500vh",
           // backgroundColor: "#0078FF",
           borderRight: "1px solid black",
           float: "left",
@@ -241,7 +251,24 @@ class Items extends Component {
           }}
           onClick={e => this.changeButtonColorAndChangeDisplay("workflow")}
         >
-          Create Workflow
+          Create Workflow Unstructured
+        </div>
+
+		<div id="workflow3"
+          style={{
+            backgroundColor: "#3b5998",
+            width: "100%",
+            marginBottom: "20px",
+            cursor: "pointer",
+            textAlign: "center",
+            color: "white",
+            paddingTop: "5px",
+            paddingBottom: "5px",
+			display: "none"
+          }}
+          onClick={e => this.changeButtonColorAndChangeDisplay("workflow3")}
+        >
+          Create Workflow Structured
         </div>
 
         <div id="codebox"

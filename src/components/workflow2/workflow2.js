@@ -7,7 +7,7 @@ import Button from "react-bootstrap/Button";
 import CKEditor from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
-  class Workflow extends Component {
+  class Workflow2 extends Component {
 
  constructor(props) {
     super(props);
@@ -72,7 +72,7 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
    * This function is used to call a modal window
    */
    call() {
-        this.setState({ modalShow: true });
+	 this.setState({ modalShow: true });
    }
 
      /**
@@ -181,4 +181,4 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
   }
   }
 
-  export default Workflow;
+  export default Workflow2;
