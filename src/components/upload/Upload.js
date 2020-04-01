@@ -65,39 +65,43 @@ class Upload extends Component {
 
   async getFileFromToken() {
     const { token } = this.state;
-    const url = `${baseUrl}/file-data`;
+	if (token=="") {
+		alert("Please make sure files have been uploaded!")
+	} else {
+		const url = `${baseUrl}/file-data`;
 
-    const data = new FormData();
-    data.append("fileKey", token);
+		const data = new FormData();
+		data.append("fileKey", token);
 
-    ls.set("token", token);
-    //Fetching Row Data
-    const request = await fetch(url, {
-      method: "POST",
-      body: data
-    });
-    const rowData = await request.json();
+		ls.set("token", token);
+		//Fetching Row Data
+		const request = await fetch(url, {
+		  method: "POST",
+		  body: data
+		});
+		const rowData = await request.json();
 
-    //Fetching columns
-    const request2 = await fetch(`${baseUrl}/stats`, {
-      method: "POST",
-      body: data
-    });
+		//Fetching columns
+		const request2 = await fetch(`${baseUrl}/stats`, {
+		  method: "POST",
+		  body: data
+		});
 
-    const newData = await request2.json();
-    const cols = newData.columns;
-    // console.log(cols);
+		const newData = await request2.json();
+		const cols = newData.columns;
+		// console.log(cols);
 
-    this.props.getData(rowData, cols);
+		this.props.getData(rowData, cols);
 	
-	// change button color of Upload File button since app navigates to Display Data page
-	document.getElementById("csvUpload").style.backgroundColor = "#3b5998";	
+		// change button color of Upload File button since app navigates to Display Data page
+		document.getElementById("csvUpload").style.backgroundColor = "#3b5998";	
 
-	// change button color of Display Content button since app navigates to Display Data page
-	document.getElementById("displayContent").style.backgroundColor = "#61ddff";	
+		// change button color of Display Content button since app navigates to Display Data page
+		document.getElementById("displayContent").style.backgroundColor = "#61ddff";	
 
 
-    this.props.changeDisplay();
+		this.props.changeDisplay();
+	}
   }
 
   render() {
@@ -114,6 +118,7 @@ class Upload extends Component {
             <h3>
               <u>Upload a Structured File</u>
             </h3>
+			<p><i>File types supported - CSV, stuctured TXT with a delimiter</i></p>
             <input
               style={{ marginLeft: "20px", marginBottom: "20px" }}
               type="file"
@@ -165,7 +170,7 @@ class Upload extends Component {
             <Button
               type="button"
               onClick={() => this.uploadFile()}
-            >Submit</Button>
+            >Submit File</Button>
           </div>
 
           <hr />
@@ -175,7 +180,7 @@ class Upload extends Component {
           
           <input
             type="text"
-            placeholder="Enter A token"
+            placeholder="Enter a token"
             value={this.state.token}
             onChange={e => this.setState({ token: e.target.value })}
           />

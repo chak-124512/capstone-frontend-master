@@ -12,6 +12,8 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
  constructor(props) {
     super(props);
     this.state = {
+		columns: [],
+    checker: [],
 	  colors: ['lightblue', 'orange', 'lightgreen', 'pink'],
 	  modalShow: false,
       modalTopic: "Upload Unstructured Files",
@@ -53,7 +55,7 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
         ),
 		$("Button",
 			  { margin: 8,
-				click: this.setState({ modalShow: true })},$(go.TextBlock, "click")))
+				click: this.call},$(go.TextBlock, "click")))
       );
 
 	  /*if (this.props.nodeDataArray.length>0) {
@@ -71,8 +73,8 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
   /*
    * This function is used to call a modal window
    */
-   call() {
-        this.setState({ modalShow: true });
+   call(text) {
+        document.getElementById("Upload Unstructured Files").style.display = "";
    }
 
      /**
@@ -108,6 +110,7 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
    }
 
   render () {
+  const { columns: cols } = this.state;
     return (
 	      <React.Fragment>
 			<Container>
@@ -132,10 +135,24 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 			</Col>
 			<Col xs="1" sm="1">
 			<p></p>
+						<b>File Upload Node:</b>
+						<p></p>
 			<Button onClick={() => this.addNodeToDiagram("Upload Unstructured Files")}>Upload Unstructured Files</Button>
 			<p></p>
-			<Button onClick={() => this.addNodeToDiagram("Remove Stop Words")}>Remove Stop Words</Button>
+			<b>Display Data Node:</b>
 			<p></p>
+			<Button onClick={() => this.addNodeToDiagram("Display Data")}>Display Data</Button>
+			<p></p>
+						<b>Pre-processing Nodes:</b>
+						<p></p>
+			<Button onClick={() => this.addNodeToDiagram("Perform stemming")}>Perform stemming</Button>
+			<p></p>
+			<Button onClick={() => this.addNodeToDiagram("Perform lemmatization")}>Perform lemmatization</Button>
+			<p></p>
+			<Button onClick={() => this.addNodeToDiagram("Remove Selected Words")}>Remove Stop Words</Button>
+			<p></p>
+						<b>Data Mining Nodes:</b>
+						<p></p>
 			<Button onClick={() => this.addNodeToDiagram("Topic Modeling")}>Topic Modeling</Button>
 			<p></p>
 			<Button onClick={() => this.addNodeToDiagram("Word Embedding")}>Word Embedding</Button>
@@ -143,21 +160,20 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 			</Col>
 			</Row>
 	</Container>
-	 <Modal
-          show={this.state.modalShow}
-          onHide={e => this.setState({ modalShow: false })}
-        >
-          <Modal.Header closeButton>
-            <Modal.Title>{this.state.modalTopic}</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <CKEditor
-              editor={ClassicEditor}
-              data={this.state.modalContent}
-              disabled={true}
-              config={{ toolbar: [] }}
-            />
-			<input
+	
+		<div id="Upload Unstructured Files" 
+		style={{align: "center",
+            marginLeft: "20%",
+            marginTop: "10px",display: "none"}}>
+			<div style={{}}>
+            <h3>
+              <u>Upload 1 or more Unstructured Files</u>
+            </h3>
+			<p><i>File types supported - TXT, DOCX</i></p>
+			<Button onClick={() => this.getData("upload-unstructured-info")}>
+                  What happens when I upload?
+            </Button>
+            <input
               style={{ marginLeft: "20px", marginBottom: "20px" }}
               type="file"
               ref={ref => {
@@ -165,17 +181,121 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
               }}
 			  multiple
             />
-          </Modal.Body>
-          <Modal.Footer>
-            <Button
-              variant="secondary"
-              onClick={e => this.setState({ modalShow: false })}
+
+			<p>Perform word stemming?
+			&nbsp;&nbsp;&nbsp;
+            <select
+              onChange={e => this.setState({ stemming: e.target.value })}
             >
-              Close
+              <option>Yes</option>
+              <option>No</option>
+            </select>
+			&nbsp;&nbsp;&nbsp;
+			<Button onClick={() => this.getData("stemming-info")}>
+                  Help!
             </Button>
-            <Button variant="primary">Save Changes</Button>
-          </Modal.Footer>
-        </Modal>
+			</p>
+
+			<p>Perform word lemmatization?
+			&nbsp;&nbsp;&nbsp;
+            <select
+              onChange={e => this.setState({ lemmatization: e.target.value })}
+            >
+              <option>Yes</option>
+              <option>No</option>
+            </select>
+			&nbsp;&nbsp;&nbsp;
+			<Button onClick={() => this.getData("lemmatization-info")}>
+                  Help!
+            </Button>
+			</p>
+
+		  </div>
+
+		  <br />
+          <div>
+			<p>Enter Description(Optional):</p>
+            <textarea
+              value={this.state.description}
+              cols="30"
+              rows="5"
+              resize="false"
+              onChange={e => this.setState({ description: e.target.value })}
+            ></textarea>
+			</div>
+            
+          <br />
+          <div>
+            <Button
+              type="button"
+              onClick={() => this.uploadFile()}
+            >Submit Files</Button>
+          </div>
+		  </div>
+		
+		  <div id="Remove Selected Words" style={{ marginLeft: 245, marginTop: 10, display: "none"}}>
+          <div>
+            <span
+              style={{
+                position: "relative",
+                left: "30%",
+                top: "10px"
+              }}
+            >
+            </span>
+          </div>
+          <br />
+          <br />
+
+          <div>
+            <h3>
+              <u>Cleaning Process</u>
+            </h3>
+			<br />
+          <div>
+            <Button
+              type="button"
+              onClick={() => this.removeStopWords()}
+            >Remove Selected Words from the table</Button>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<input
+                  type="button"
+                  value="Help!"
+                  onClick={() => this.getData("remove-words")}
+                />
+			
+          </div>
+		  	
+			<br />
+
+			<Row style={{ paddingLeft: 10, paddingTop: 10 }}>
+          {cols.map((item, key) => (
+            <Col key={key} md="3">
+              <Row>
+                <Col>
+                  <label>{item}</label>
+                </Col>
+                <Col>
+                  <input
+                    type="checkbox"
+                    value={item}
+                    onChange={e => {
+                      this.updateCheck(e, key);
+                    }}
+                  />
+                </Col>
+              </Row>
+            </Col>
+          ))}
+        </Row>
+			<br />
+            
+          </div>
+		  </div>
+
+          
+
+
 </React.Fragment>
     );
   }

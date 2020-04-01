@@ -5,6 +5,7 @@ import ls from "local-storage";
 import { baseUrl } from "../../shared/baseUrl";
 import { Button } from 'react-bootstrap'
 import Items from "../Items"
+import Modal from "react-bootstrap/Modal";
 
 class Upload2 extends Component {
   state = {
@@ -12,7 +13,12 @@ class Upload2 extends Component {
     description: "",
     token: "",
     fileMeta: [],
-	isStructured: "No"
+	isStructured: "No",
+	stemming: "Yes",
+	lemmatization: "Yes",
+    modalShow: false,
+    modalTopic: "File upload status",
+    modalContent: ""
   };
 
    componentDidMount() {
@@ -27,9 +33,24 @@ class Upload2 extends Component {
       .catch(err => console.log(err));
   };
 
-  
+  getData = topic => {
+    const url = `${baseUrl}/get-help`;
+    const data = new FormData();
+    data.append("topic", topic);
+    fetch(url, {
+      method: "POST",
+      body: data
+    })
+      .then(response => response.json())
+      .then(data => {
+        this.setState({ modalTopic: topic });
+        this.setState({ modalContent: data.description });
+        this.setState({ modalShow: true });
+      });
+  };
+
   uploadFile = () => {
-    const { description, isStructured, miningType } = this.state;
+    const { description, isStructured, stemming, lemmatization } = this.state;
     const files = this.uploadInput.files;
     const data = new FormData();
 	if (files.length == 0)  {
@@ -41,6 +62,8 @@ class Upload2 extends Component {
 			}
 		data.append("isStructured", isStructured);
 		data.append("description", description);
+		data.append("stemming", stemming);
+		data.append("lemmatization", lemmatization);
 		// this.props.getData(uploadTest);
 		// this.props.changeDisplay();
 		console.log(files);
@@ -50,10 +73,15 @@ class Upload2 extends Component {
 		})
 		  .then(response => response.json())
 		  .then(data => {
+			
+			this.setState({ modalContent: data.message });
+			this.setState({ modalShow: true });
+
 			const { filename: token } = data;
 			// alert(JSON.stringify(data));
 			this.setState({ token });
 			ls.set("token", token);
+
 		  })
 		  // .then(() => this.getFileButton.click())
 		  .catch(err => console.log(err));
@@ -62,39 +90,44 @@ class Upload2 extends Component {
 
   async getFileFromToken() {
     const { token } = this.state;
-    const url = `${baseUrl}/file-data`;
 
-    const data = new FormData();
-    data.append("fileKey", token);
+	if (token=="") {
+		alert("Please make sure files have been uploaded!")
+	} else {
+		const url = `${baseUrl}/file-data`;
 
-    ls.set("token", token);
-    //Fetching Row Data
-    const request = await fetch(url, {
-      method: "POST",
-      body: data
-    });
-    const rowData = await request.json();
+		const data = new FormData();
+		data.append("fileKey", token);
 
-    //Fetching columns
-    const request2 = await fetch(`${baseUrl}/stats`, {
-      method: "POST",
-      body: data
-    });
+		ls.set("token", token);
+		//Fetching Row Data
+		const request = await fetch(url, {
+		  method: "POST",
+		  body: data
+		});
+		const rowData = await request.json();
 
-    const newData = await request2.json();
-    const cols = newData.columns;
-    // console.log(cols);
+		//Fetching columns
+		const request2 = await fetch(`${baseUrl}/stats`, {
+		  method: "POST",
+		  body: data
+		});
 
-    this.props.getData(rowData, cols);
+		const newData = await request2.json();
+		const cols = newData.columns;
+		// console.log(cols);
+
+		this.props.getData(rowData, cols);
 	
-	// change button color of Upload File button since app navigates to Display Data page
-	document.getElementById("uploadUnstructured").style.backgroundColor = "#3b5998";	
+		// change button color of Upload File button since app navigates to Display Data page
+		document.getElementById("uploadUnstructured").style.backgroundColor = "#3b5998";	
 
-	// change button color of Display Content button since app navigates to Display Data page
-	document.getElementById("displayContent").style.backgroundColor = "#61ddff";	
+		// change button color of Display Content button since app navigates to Display Data page
+		document.getElementById("displayContent").style.backgroundColor = "#61ddff";	
 
 
-    this.props.changeDisplay();
+		this.props.changeDisplay();
+	}
   }
 	 render() {
     return (
@@ -110,6 +143,10 @@ class Upload2 extends Component {
             <h3>
               <u>Upload 1 or more Unstructured Files</u>
             </h3>
+			<p><i>File types supported - TXT, DOCX</i></p>
+			<Button onClick={() => this.getData("upload-unstructured-info")}>
+                  What happens when I upload?
+            </Button>
             <input
               style={{ marginLeft: "20px", marginBottom: "20px" }}
               type="file"
@@ -118,7 +155,37 @@ class Upload2 extends Component {
               }}
 			  multiple
             />
+
+			<p>Perform word stemming?
+			&nbsp;&nbsp;&nbsp;
+            <select
+              onChange={e => this.setState({ stemming: e.target.value })}
+            >
+              <option>Yes</option>
+              <option>No</option>
+            </select>
+			&nbsp;&nbsp;&nbsp;
+			<Button onClick={() => this.getData("stemming-info")}>
+                  Help!
+            </Button>
+			</p>
+
+			<p>Perform word lemmatization?
+			&nbsp;&nbsp;&nbsp;
+            <select
+              onChange={e => this.setState({ lemmatization: e.target.value })}
+            >
+              <option>Yes</option>
+              <option>No</option>
+            </select>
+			&nbsp;&nbsp;&nbsp;
+			<Button onClick={() => this.getData("lemmatization-info")}>
+                  Help!
+            </Button>
+			</p>
+
 		  </div>
+		
 
           <br />
           <div>
@@ -137,7 +204,7 @@ class Upload2 extends Component {
             <Button
               type="button"
               onClick={() => this.uploadFile()}
-            >Submit</Button>
+            >Submit Files</Button>
           </div>
 
           <hr />
@@ -147,7 +214,7 @@ class Upload2 extends Component {
           
           <input
             type="text"
-            placeholder="Enter A token"
+            placeholder="Enter a token"
             value={this.state.token}
             onChange={e => this.setState({ token: e.target.value })}
           />
@@ -190,6 +257,24 @@ class Upload2 extends Component {
               </tr>
             ))}
           </table>
+
+		  <Modal
+            show={this.state.modalShow}
+            onHide={e => this.setState({ modalShow: false })}
+          >
+            <Modal.Header closeButton>
+              <Modal.Title>{this.state.modalTopic}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>{this.state.modalContent}</Modal.Body>
+            <Modal.Footer>
+              <Button
+                variant="secondary"
+                onClick={e => this.setState({ modalShow: false })}
+              >
+                Close
+              </Button>
+            </Modal.Footer>
+          </Modal>
         </div>
       </React.Fragment>
     );

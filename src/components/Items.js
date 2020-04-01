@@ -71,7 +71,7 @@ class Items extends Component {
       <div
         style={{
           width: "15vw",
-          height: "500vh",
+          height: "1000vh",
           // backgroundColor: "#0078FF",
           borderRight: "1px solid black",
           float: "left",
