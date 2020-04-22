@@ -1,9 +1,25 @@
 import React, { Component } from "react";
+import ls from "local-storage";
+import { Button } from 'react-bootstrap';
 
 class Items extends Component {
   state = {
 	currentDisplay : "uploadUnstructured"
   };
+
+  componentDidMount() {
+	// if user is logged in, then username is saved in local storage 
+	const username = ls.get("username") || "";
+	if (username != "") {
+		document.getElementById("login").style.display = "none";
+		document.getElementById("register").style.display = "none";
+		document.getElementById("logout").style.display = "";
+		document.getElementById("welcome").innerHTML = "Welcome "+ username;
+		document.getElementById("welcome").style.display = "";
+
+	}
+  }
+
   changeButtonColorAndChangeDisplay = (id) => {
 	var backgroundColor = document.getElementById(this.state.currentDisplay).style.backgroundColor;
 	// check if button color and display was changed outside this method - currentDisplay would not have changed
@@ -17,6 +33,14 @@ class Items extends Component {
 	this.setState({ currentDisplay : id });
 	this.props.changeDisplay(id);
   };
+
+  logout = () => {
+  // logout- clear username from local storage
+	ls.remove("username");
+	window.location.reload(false);
+
+  }
+
 
   showButtons = () => {
 	if (document.getElementById("csvUpload").style.display == "none") {
@@ -79,6 +103,39 @@ class Items extends Component {
           color: "white",
         }}
       >
+
+	  <div id="login"
+          style={{
+            backgroundColor: "#3b5998",
+            width: "100%",
+            marginBottom: "20px",
+            cursor: "pointer",
+            textAlign: "center",
+            paddingTop: "5px",
+            paddingBottom: "5px"
+          }}
+          onClick={e => this.changeButtonColorAndChangeDisplay("login")}
+        >
+          Login
+        </div>
+
+		
+	  <div id="register"
+          style={{
+            backgroundColor: "#3b5998",
+            width: "100%",
+            marginBottom: "20px",
+            cursor: "pointer",
+            textAlign: "center",
+            paddingTop: "5px",
+            paddingBottom: "5px"
+          }}
+          onClick={e => this.changeButtonColorAndChangeDisplay("register")}
+        >
+          Register
+        </div>
+
+	<div id="welcome" style={{margin: "10px", fontSize:"20px", color: "blue", display:"none"}} ></div>
 
 	  <p style={{margin: "10px", fontSize:"20px", color: "black"}} > File structured? 
 		<label class="switch">
@@ -218,7 +275,7 @@ class Items extends Component {
           }}
           onClick={e => this.changeButtonColorAndChangeDisplay("miningUnstructured")}
         >
-          Data Mining - Unstructured
+          Data Modelling - Unstructured
         </div>
 
         <div id="mining"
@@ -235,7 +292,7 @@ class Items extends Component {
           }}
           onClick={e => this.changeButtonColorAndChangeDisplay("mining")}
         >
-          Data Mining - Structured
+          Data Modelling - Structured
         </div>
 
 		 <div id="workflow"
@@ -286,6 +343,12 @@ class Items extends Component {
         >
           Your Code Box
         </div>
+
+		<div id="logout" style={{margin: "30px", display: "none"}}>
+		  <Button onClick={() => this.logout()}>
+					  Logout
+		</Button>
+		</div>
 
       </div>
     );

@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import renderIf from "render-if";
+import Login from "./login";
+import Register from "./register";
 import Upload from "./upload";
 import Upload2 from "./upload2";
 import Display from "./display";
@@ -25,11 +27,14 @@ class Content extends Component {
 		uNodeKey: 0,
 		uLinkKey: 0,
 		uY: 0,
+		uPage: "workflow",
 		sNodeDataArray: [],
 		sLinkDataArray: [],
 		sNodeKey: 0,
 		sLinkKey: 0,
-		sY: 0
+		sY: 0,
+		sPage: "workflow3",
+
   };
   triggerDataUpdate = () => {
     const data = {
@@ -41,26 +46,30 @@ class Content extends Component {
   };
 
   // update the state variables here that have been updated in unstructured worflow related child components
-  updateUnstructuredWorkflowData = (newNodeDataArray, newLinkDataArray, newNodeKey, newLinkKey, newY) => {
+  updateUnstructuredWorkflowData = (newNodeDataArray, newLinkDataArray, newNodeKey, newLinkKey, newY, newPage) => {
 	this.setState({ uNodeDataArray: newNodeDataArray });
 	this.setState({ uLinkDataArray: newLinkDataArray });
 	this.setState({ uNodeKey: newNodeKey });
 	this.setState({ uLinkKey: newLinkKey });
 	this.setState({ uY: newY });
+	this.setState({ uPage: newPage });
   };
 
   // update the state variables here that have been updated in structured worflow related child components
-  updateStructuredWorkflowData = (newNodeDataArray, newLinkDataArray, newNodeKey, newLinkKey, newY) => {
+  updateStructuredWorkflowData = (newNodeDataArray, newLinkDataArray, newNodeKey, newLinkKey, newY, newPage) => {
 	this.setState({ sNodeDataArray: newNodeDataArray });
 	this.setState({ sLinkDataArray: newLinkDataArray });
 	this.setState({ sNodeKey: newNodeKey });
 	this.setState({ sLinkKey: newLinkKey });
 	this.setState({ sY: newY });
+	this.setState({ sPage: newPage });
   };
 
   render() {
     const { display } = this.props;
     console.log("dis", display);
+	const renderLogin = renderIf(display === "login")
+	const renderRegister = renderIf(display === "register")
     const renderCsvUpload = renderIf(display === "csvUpload");
 	const renderUploadUnstructured = renderIf(display === "uploadUnstructured");
     const renderDisplay = renderIf(display === "displayContent");
@@ -79,6 +88,8 @@ class Content extends Component {
 
     return (
       <React.Fragment>
+		{renderLogin(<Login />)}
+		{renderRegister(<Register />)}
         {renderCsvUpload(
           <Upload
             changeDisplay={this.props.changeDisplay}
@@ -112,6 +123,7 @@ class Content extends Component {
 			nodeKey={this.state.uNodeKey}
 			linkKey={this.state.uLinkKey}
 			y={this.state.uY}
+			page={this.state.uPage}
 			onWorkflowDataChange={this.updateUnstructuredWorkflowData}
 		/>)}
 		{renderWorkflow2(
@@ -123,6 +135,7 @@ class Content extends Component {
 			nodeKey={this.state.uNodeKey}
 			linkKey={this.state.uLinkKey}
 			y={this.state.uY}
+			page={this.state.uPage}
 			onWorkflowDataChange={this.updateUnstructuredWorkflowData}
 		/>)}
 		{renderWorkflow3(
@@ -134,6 +147,7 @@ class Content extends Component {
 			nodeKey={this.state.sNodeKey}
 			linkKey={this.state.sLinkKey}
 			y={this.state.sY}
+			page={this.state.sPage}
 			onWorkflowDataChange={this.updateStructuredWorkflowData}
 		/>)}
 		{renderWorkflow4(
@@ -145,6 +159,7 @@ class Content extends Component {
 			nodeKey={this.state.sNodeKey}
 			linkKey={this.state.sLinkKey}
 			y={this.state.sY}
+			page={this.state.sPage}
 			onWorkflowDataChange={this.updateStructuredWorkflowData}
 		/>)}
         {renderCodeBox(<CodeBox />)}

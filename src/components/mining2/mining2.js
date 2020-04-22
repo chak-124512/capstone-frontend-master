@@ -28,7 +28,9 @@ class Mining2 extends Component {
       modalShow: false,
       modalTopic: "TM",
       modalContent: "Result HTML of Topic Modeling",
-	  n_topics: 0
+	  n_topics: 0,
+	  columns: [],
+      checker: []
     };
 
     this.selectEvalutionModel = this.selectEvalutionModel.bind(this);
@@ -50,6 +52,25 @@ class Mining2 extends Component {
       ],
 	  index:0
     });
+	 var checker = [];
+    this.getColumns().then(() => {
+      this.state.columns.forEach((element, index) => {
+        checker.push(false);
+      });
+      this.setState({ checker: checker });
+	     this.setState({
+        column_dropdown: (
+          <Col>
+            <select onChange={e => this.setTargetValue(e)}>
+              <option>--Select--</option>
+              {this.state.columns.map((item, key) => (
+                <option key={key}>{item}</option>
+              ))}
+            </select>
+          </Col>
+        )
+      });
+	  });
   }
 
   updateCheck = (e, index) => {
@@ -74,6 +95,25 @@ class Mining2 extends Component {
     console.log("selected target variable", e.target.value);
     this.setState({ target: e.target.value });
   };
+
+  async getColumns() {
+    const data = new FormData();
+    const fileKey = ls.get("token") || "testkey";
+    console.log(fileKey);
+    data.append("fileKey", fileKey);
+    const url = `${baseUrl}/stats`;
+    const response = await fetch(url, {
+      method: "POST",
+      body: data
+    });
+    const columns = await response.json();
+    var result = columns.columns;
+	result = result.slice(1,result.length);
+	this.setState({ columns: result });
+	if (result.length>0) {
+			document.getElementById("allCols").style.display = "";
+		}
+  }
 
   submitData() {
     console.log("Data Submit");
@@ -186,6 +226,7 @@ class Mining2 extends Component {
 
   render() {
     const { evalutionModel, model } = this.state;
+	const { columns: cols } = this.state;
 
     let evalutionModelList =
       evalutionModel.length > 0 &&
@@ -251,6 +292,29 @@ class Mining2 extends Component {
               >
               Get Info about chosen model
               </button>
+            </Col>
+
+			<Col>
+						<div id="allCols" class="column-box2" style={{display:"none"}}>
+
+              {cols.map((item, key) => (
+                <Row key={key}>
+                  <Col sm={8}>
+                    <label>{item}</label>
+                  </Col>
+                  <Col sm={4}>
+                    <input
+                      type="checkbox"
+                      value={item}
+                      onChange={e => {
+                        this.updateCheck(e, key);
+                      }}
+                    />
+                  </Col>
+                </Row>
+              ))}
+
+			  </div>
             </Col>
 
           </Row>

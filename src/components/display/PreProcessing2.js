@@ -48,6 +48,9 @@ class PreProcessing2 extends Component {
 		var result = columns.columns;
 		result = result.slice(1,result.length);
 		this.setState({ columns: result });
+		if (result.length>0) {
+			document.getElementById("allCols").style.display = "";
+		}
 	}
   }
 
@@ -138,6 +141,7 @@ class PreProcessing2 extends Component {
 		  	
 			<br />
 
+			<div id="allCols" class="column-box" style={{display:"none"}}>
 			<Row style={{ paddingLeft: 10, paddingTop: 10 }}>
           {cols.map((item, key) => (
             <Col key={key} md="3">
@@ -158,6 +162,7 @@ class PreProcessing2 extends Component {
             </Col>
           ))}
         </Row>
+		</div>
 			<br />
             
           </div>

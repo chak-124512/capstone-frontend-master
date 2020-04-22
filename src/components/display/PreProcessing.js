@@ -6,6 +6,7 @@ import Button from "react-bootstrap/Button";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { baseUrl } from "../../shared/baseUrl";
 
+
 class PreProcessing extends Component {
   state = {
     columns: [],
@@ -210,7 +211,8 @@ class PreProcessing extends Component {
               ))}
             </table>
           </div>
-          <div>
+
+          <div class="box3">
             <h3>
               <u>Cleaning Process</u>
             </h3>
@@ -355,6 +357,7 @@ class PreProcessing extends Component {
               </tr>
             </table>
           </div>
+
           <Modal
             show={this.state.modalShow}
             onHide={e => this.setState({ modalShow: false })}
