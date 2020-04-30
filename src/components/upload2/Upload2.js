@@ -11,7 +11,6 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 class Upload2 extends Component {
   state = {
-	delimiter: "",
     description: "",
     token: "",
     fileMeta: [],
@@ -76,7 +75,7 @@ class Upload2 extends Component {
 	if (files.length == 0)  {
 		alert("Please upload atleast 1 file.")
 	}
-	else if (topics == "" || isNaN(topics)) {
+	else if (parsingType=="LDA" && (topics == "" || isNaN(topics))) {
 		alert("Enter a valid topic number.")
 	}
 	else {
@@ -108,7 +107,7 @@ class Upload2 extends Component {
 			const { filename: token } = data;
 			// alert(JSON.stringify(data));
 			this.setState({ token });
-			ls.set("token", token);
+			ls.set("token_unstructured", token);
 
 		  })
 		  // .then(() => this.getFileButton.click())
@@ -123,7 +122,9 @@ class Upload2 extends Component {
 		} else {
 			document.getElementById("topic").style.display = "none";
 		}
-  } 
+  }
+  
+   
 
   async getFileFromToken() {
     const { token } = this.state;
@@ -160,10 +161,10 @@ class Upload2 extends Component {
 		document.getElementById("uploadUnstructured").style.backgroundColor = "#3b5998";	
 
 		// change button color of Display Content button since app navigates to Display Data page
-		document.getElementById("displayContent").style.backgroundColor = "#61ddff";	
+		document.getElementById("displayUnstructured").style.backgroundColor = "#61ddff";	
 
 
-		this.props.changeDisplay();
+		this.props.changeDisplay2();
 	}
   }
 	 render() {
@@ -295,35 +296,7 @@ class Upload2 extends Component {
 
           <br />
           <br />
-          <table border="1px solid black" cellPadding="15px">
-            <tr>
-              <th>File Name</th>
-              <th>description</th>
-            </tr>
-            {this.state.fileMeta.map((item, key) => (
-              <tr>
-                <td>
-                  <span
-                    style={{
-                      color: "blue",
-                      fontWeight: "bold",
-                      cursor: "pointer"
-                    }}
-                    onClick={e => {
-                      this.setState({ token: item.token });
-                      ls.set("token", item.token);
-                    }}
-                  >
-                    {item.filename}
-                  </span>
-                </td>
-                <td>
-                  <span>{item.description}</span>
-                </td>
-              </tr>
-            ))}
-          </table>
-
+ 
 		  <Modal
           show={this.state.modalShow}
           onHide={e => this.setState({ modalShow: false })}

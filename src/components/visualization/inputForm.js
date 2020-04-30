@@ -52,6 +52,9 @@ class InputForm extends Component {
     });
     const columns = await response.json();
     this.setState({ columns: columns.columns });
+	if (this.state.columns.length>0) {
+			document.getElementById("allCols").style.display = "";
+	}
   }
 
   getCharts = () => {
@@ -133,6 +136,7 @@ class InputForm extends Component {
     const { columns: cols } = this.state;
     return (
       <React.Fragment>
+	  	<div id="allCols" class="column-box" style={{display:"none"}}>
         <Row style={{ paddingLeft: 10, paddingTop: 10 }}>
           {cols.map((item, key) => (
             <Col key={key} md="3">
@@ -153,6 +157,8 @@ class InputForm extends Component {
             </Col>
           ))}
         </Row>
+		</div>
+
         <Row style={{ paddingLeft: 10, paddingTop: 20 }}>
           <Col>
             <select
@@ -189,7 +195,7 @@ class InputForm extends Component {
         </Row>
         <Row>
           {this.state.chartType == "Correlation" ? (
-            <h4 style={{ textAlign: "center", padding: "-5px" }}>
+            <h4 style={{ textAlign: "center", paddingLeft: 30, paddingTop: 20 }}>
               Correlation
             </h4>
           ) : null}

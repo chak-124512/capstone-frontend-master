@@ -5,8 +5,9 @@ import Register from "./register";
 import Upload from "./upload";
 import Upload2 from "./upload2";
 import Display from "./display";
+import Display2 from "./display2";
 import PreProcessing from "./display/PreProcessing";
-import PreProcessing2 from "./display/PreProcessing2";
+import PreProcessing2 from "./display2/PreProcessing2";
 import Visualization from "./visualization";
 import Tranformation from "./tranformation";
 import Mining from "./mining";
@@ -27,12 +28,14 @@ class Content extends Component {
 		uNodeKey: 0,
 		uLinkKey: 0,
 		uY: 0,
+		uName: "",
 		uPage: "workflow",
 		sNodeDataArray: [],
 		sLinkDataArray: [],
 		sNodeKey: 0,
 		sLinkKey: 0,
 		sY: 0,
+		sName: "",
 		sPage: "workflow3",
 
   };
@@ -46,22 +49,24 @@ class Content extends Component {
   };
 
   // update the state variables here that have been updated in unstructured worflow related child components
-  updateUnstructuredWorkflowData = (newNodeDataArray, newLinkDataArray, newNodeKey, newLinkKey, newY, newPage) => {
+  updateUnstructuredWorkflowData = (newNodeDataArray, newLinkDataArray, newNodeKey, newLinkKey, newY, newName, newPage) => {
 	this.setState({ uNodeDataArray: newNodeDataArray });
 	this.setState({ uLinkDataArray: newLinkDataArray });
 	this.setState({ uNodeKey: newNodeKey });
 	this.setState({ uLinkKey: newLinkKey });
 	this.setState({ uY: newY });
+	this.setState({ uName: newName });
 	this.setState({ uPage: newPage });
   };
 
   // update the state variables here that have been updated in structured worflow related child components
-  updateStructuredWorkflowData = (newNodeDataArray, newLinkDataArray, newNodeKey, newLinkKey, newY, newPage) => {
+  updateStructuredWorkflowData = (newNodeDataArray, newLinkDataArray, newNodeKey, newLinkKey, newY, newName, newPage) => {
 	this.setState({ sNodeDataArray: newNodeDataArray });
 	this.setState({ sLinkDataArray: newLinkDataArray });
 	this.setState({ sNodeKey: newNodeKey });
 	this.setState({ sLinkKey: newLinkKey });
 	this.setState({ sY: newY });
+	this.setState({ sName: newName });
 	this.setState({ sPage: newPage });
   };
 
@@ -73,6 +78,7 @@ class Content extends Component {
     const renderCsvUpload = renderIf(display === "csvUpload");
 	const renderUploadUnstructured = renderIf(display === "uploadUnstructured");
     const renderDisplay = renderIf(display === "displayContent");
+	const renderDisplayUnstructured = renderIf(display === "displayUnstructured");
     const renderPreProcessing = renderIf(display === "preProcessing");
 	const renderPreProcessingUnstructured = renderIf(display === "preProcessingUnstructured");
     const renderVisualization = renderIf(display === "visualization");
@@ -98,12 +104,18 @@ class Content extends Component {
         )}
 		{renderUploadUnstructured(
           <Upload2
-            changeDisplay={this.props.changeDisplay}
+            changeDisplay2={this.props.changeDisplay2}
 			updateStateRef={e => this.setState({ uploadRef: e })}
           />
         )}
         {renderDisplay(
           <Display
+            ref={e => (this.displayRef = e)}
+            updateData={() => this.triggerDataUpdate()}
+          />
+        )}
+		{renderDisplayUnstructured(
+          <Display2
             ref={e => (this.displayRef = e)}
             updateData={() => this.triggerDataUpdate()}
           />
@@ -124,6 +136,7 @@ class Content extends Component {
 			linkKey={this.state.uLinkKey}
 			y={this.state.uY}
 			page={this.state.uPage}
+			name={this.state.uName}
 			onWorkflowDataChange={this.updateUnstructuredWorkflowData}
 		/>)}
 		{renderWorkflow2(
@@ -136,6 +149,7 @@ class Content extends Component {
 			linkKey={this.state.uLinkKey}
 			y={this.state.uY}
 			page={this.state.uPage}
+			name={this.state.uName}
 			onWorkflowDataChange={this.updateUnstructuredWorkflowData}
 		/>)}
 		{renderWorkflow3(
@@ -148,6 +162,7 @@ class Content extends Component {
 			linkKey={this.state.sLinkKey}
 			y={this.state.sY}
 			page={this.state.sPage}
+			name={this.state.sName}
 			onWorkflowDataChange={this.updateStructuredWorkflowData}
 		/>)}
 		{renderWorkflow4(
@@ -160,6 +175,7 @@ class Content extends Component {
 			linkKey={this.state.sLinkKey}
 			y={this.state.sY}
 			page={this.state.sPage}
+			name={this.state.sName}
 			onWorkflowDataChange={this.updateStructuredWorkflowData}
 		/>)}
         {renderCodeBox(<CodeBox />)}

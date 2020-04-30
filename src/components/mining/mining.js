@@ -97,6 +97,9 @@ class Mining extends Component {
     });
     const columns = await response.json();
     this.setState({ columns: columns.columns });
+	if (this.state.columns.length>0) {
+			document.getElementById("allCols").style.display = "";
+		}
   }
 
   selectEvalutionModel = e => {
@@ -417,6 +420,9 @@ class Mining extends Component {
             </Col>
 			
 			<Col>
+						<div id="allCols" class="column-box2">
+										<h5>Select columns</h5>
+
               {cols.map((item, key) => (
                 <Row key={key}>
                   <Col sm={8}>
@@ -433,7 +439,10 @@ class Mining extends Component {
                   </Col>
                 </Row>
               ))}
+
+			  </div>
             </Col>
+
           </Row>
         </Container>
         <br />

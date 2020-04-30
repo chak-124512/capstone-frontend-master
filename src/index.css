@@ -107,7 +107,7 @@ input:checked + .slider .off
 /* CSS for workflow */
  .diagram-component {
     width: 650px;
-    height: 2000px;
+    height: 1000px;
     border: solid 1px black;
     background-color: white;
   }
@@ -159,4 +159,3 @@ input:checked + .slider .off
   padding: 10px;
   margin: 20px;
   }
-

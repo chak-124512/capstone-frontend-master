@@ -30,7 +30,8 @@ class Mining2 extends Component {
       modalContent: "Result HTML of Topic Modeling",
 	  n_topics: 0,
 	  columns: [],
-      checker: []
+      checker: [],
+	  selectAllCols: "No"
     };
 
     this.selectEvalutionModel = this.selectEvalutionModel.bind(this);
@@ -123,15 +124,22 @@ class Mining2 extends Component {
     const fileKey = ls.get("token") || this.state.evalutionModelValue || "testkey";
     const images = [];
 	const statics_url = `${baseUrl}/static/`;
+	const required_columns = [];
+    this.state.columns.forEach((column, index) => {
+      if (this.state.checker[index] == true) {
+        required_columns.push(column);
+      }
+    });
+	const selectAllCols = this.state.selectAllCols;
 
-
- 
     if (this.state.selectedModel == "") {
 		alert("Please choose a model first among the options");
 	} else if (this.state.selectedModel == "TM") {
 		const data = new FormData();
       data.append("fileKey", fileKey);
       data.append("n_topics", this.state.n_topics);
+	  data.append("selectAllCols", selectAllCols);
+	  data.append("columns", required_columns);
       const url = `${baseUrl}/topic-modeling`;
       fetch(url, {
         method: "POST",
@@ -139,10 +147,9 @@ class Mining2 extends Component {
       })
         .then(response => response.json())
         .then(data => {
-			if (data["description"]!="topics.html") {
+			if (data["description"]=="No file has been uploaded. Please upload atleast 1 file in the upload file tab.") {
 				alert(data["description"])
 			} else {
-				alert("Please reload the new window once it appears to get the new result.")
 				window.open(statics_url+ data["description"]);
 			}
         
@@ -150,7 +157,8 @@ class Mining2 extends Component {
 	} else if (this.state.selectedModel == "WE") {
 		const data = new FormData();
       data.append("fileKey", fileKey);
-
+	   data.append("selectAllCols", selectAllCols);
+	  data.append("columns", required_columns);
       const url = `${baseUrl}/word-embedding`;
       fetch(url, {
         method: "POST",
@@ -205,12 +213,22 @@ class Mining2 extends Component {
   };
   renderElement() {
     console.log("vadfsdf", this.state.selectedModel);
-
 	if (this.state.selectedModel === "TM") {
-      console.log("inside TM");
       return (
         <Container style={{ marginTop: "15px" }}>
           <Row>
+			<Col>Select All Columns:&nbsp;&nbsp;&nbsp;
+			<select
+              onChange={e => this.setState({ selectAllCols: e.target.value })}
+            >
+			<option>No</option>
+              <option>Yes</option>
+              
+			</select>
+            </Col>
+			</Row>
+			<Row>&nbsp;&nbsp;&nbsp;</Row>
+			<Row>
             <Col>Enter the number of topics you want to get:</Col>
             <Col>
               <input
@@ -221,7 +239,23 @@ class Mining2 extends Component {
           </Row>
         </Container>
       );
-    }
+	  } else if (this.state.selectedModel === "WE") {
+	  return (
+        <Container style={{ marginTop: "15px" }}>
+          <Row>
+			<Col>Select All Columns:&nbsp;&nbsp;&nbsp;
+			<select
+              onChange={e => this.setState({ selectAllCols: e.target.value })}
+            >
+			<option>No</option>
+              <option>Yes</option>
+              
+			</select>
+            </Col>
+			</Row>
+        </Container>
+      );
+	  }
   }
 
   render() {
@@ -296,6 +330,7 @@ class Mining2 extends Component {
 
 			<Col>
 						<div id="allCols" class="column-box2" style={{display:"none"}}>
+										<h5>Select columns</h5>
 
               {cols.map((item, key) => (
                 <Row key={key}>
@@ -317,23 +352,20 @@ class Mining2 extends Component {
 			  </div>
             </Col>
 
-          </Row>
-        </Container>
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-       
-
-        {this.state.images
+			<Col>
+			 {this.state.images
           ? this.state.images.map((url, index) => (
               <div>
                 <img src={`${baseUrl}/static/` + url}></img>
               </div>
             ))
           : null}
+		  </Col>
+          </Row>
+        </Container>
+       
+
+       
 
         <Modal
           show={this.state.modalShow}

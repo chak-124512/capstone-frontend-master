@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { sampleData, sampleRowData } from "./displaytest2";
 import ls from "local-storage";
 import Modal from "react-bootstrap/Modal";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -81,7 +80,9 @@ class PreProcessing2 extends Component {
 		  body: data
 		})
 		  .then(response => response.json())
-		  .then(data => alert(data.message));
+		  .then(data => {
+		  alert(data.message);
+		  this.getColumns();});
 	}
   };
 
@@ -130,12 +131,7 @@ class PreProcessing2 extends Component {
               type="button"
               onClick={() => this.removeStopWords()}
             >Remove Selected Words from the table</Button>
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<input
-                  type="button"
-                  value="Help!"
-                  onClick={() => this.getData("remove-words")}
-                />
+			
 			
           </div>
 		  	

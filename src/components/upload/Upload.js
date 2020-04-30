@@ -236,34 +236,7 @@ class Upload extends Component {
 
           <br />
           <br />
-          <table border="1px solid black" cellPadding="15px">
-            <tr>
-              <th>File Name</th>
-              <th>description</th>
-            </tr>
-            {this.state.fileMeta.map((item, key) => (
-              <tr>
-                <td>
-                  <span
-                    style={{
-                      color: "blue",
-                      fontWeight: "bold",
-                      cursor: "pointer"
-                    }}
-                    onClick={e => {
-                      this.setState({ token: item.token });
-                      ls.set("token", item.token);
-                    }}
-                  >
-                    {item.filename}
-                  </span>
-                </td>
-                <td>
-                  <span>{item.description}</span>
-                </td>
-              </tr>
-            ))}
-          </table>
+         
 
 		   <Modal
           show={this.state.modalShow}

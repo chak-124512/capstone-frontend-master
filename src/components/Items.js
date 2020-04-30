@@ -16,6 +16,7 @@ class Items extends Component {
 		document.getElementById("logout").style.display = "";
 		document.getElementById("welcome").innerHTML = "Welcome "+ username;
 		document.getElementById("welcome").style.display = "";
+		document.getElementById("workflow").style.display = "";
 
 	}
   }
@@ -25,6 +26,7 @@ class Items extends Component {
 	// check if button color and display was changed outside this method - currentDisplay would not have changed
 	if (backgroundColor == "rgb(59, 89, 152)") {
 		document.getElementById("displayContent").style.backgroundColor = "#3b5998";
+		document.getElementById("displayUnstructured").style.backgroundColor = "#3b5998";
 	} else {
 	  	document.getElementById(this.state.currentDisplay).style.backgroundColor = "#3b5998";
 	}
@@ -43,20 +45,43 @@ class Items extends Component {
 
 
   showButtons = () => {
+	const username = ls.get("username") || "";
 	if (document.getElementById("csvUpload").style.display == "none") {
 		// change from unstructured file view to stuctured file view
+
+		// toggle upload tabs
 		document.getElementById("csvUpload").style.display = "";
 		document.getElementById("uploadUnstructured").style.display = "none";
+
+		// toggle display tabs
+		document.getElementById("displayContent").style.display = "";
+		document.getElementById("displayUnstructured").style.display = "none";
+
+		// transformation tab only needed for structured data
 		document.getElementById("transformation").style.display = "";
+
+		// visualization tab only needed for structured data
+		document.getElementById("visualization").style.display = "";
+
+		// toggle preprocessing tabs
 		document.getElementById("preProcessing").style.display = "";
 		document.getElementById("preProcessingUnstructured").style.display = "none";
+
+		// toggle data modelling operations tab
 		document.getElementById("mining").style.display = "";
 		document.getElementById("miningUnstructured").style.display = "none";
-		document.getElementById("workflow3").style.display = "";
-		document.getElementById("workflow").style.display = "none";
+
+		// toggle workflow tabs only if user is logged in
+		if (username != "") {
+			document.getElementById("workflow3").style.display = "";
+			document.getElementById("workflow").style.display = "none";
+		}
+
 		// change from tabs that won't be visible in unstructured file view
 		if (this.state.currentDisplay=="uploadUnstructured") {
 			this.changeButtonColorAndChangeDisplay("csvUpload");
+		} else if (this.state.currentDisplay=="displayUnstructured") {
+			this.changeButtonColorAndChangeDisplay("displayContent");
 		} else if (this.state.currentDisplay=="preProcessingUnstructured") {
 			this.changeButtonColorAndChangeDisplay("preProcessing");
 		} else if (this.state.currentDisplay=="miningUnstructured") {
@@ -66,18 +91,41 @@ class Items extends Component {
 		}
 	} else {
 		// change from structured file view to unstuctured file view
+		
+		// toggle upload tabs
 		document.getElementById("csvUpload").style.display = "none";
 		document.getElementById("uploadUnstructured").style.display = "";
+
+		// toggle display tabs
+		document.getElementById("displayContent").style.display = "none";
+		document.getElementById("displayUnstructured").style.display = "";
+
+		// visualization tab only needed for structured data
+		document.getElementById("visualization").style.display = "none";
+
+		// transformation tab only needed for structured data
 		document.getElementById("transformation").style.display = "none";
+
+		// toggle preprocessing tabs
 		document.getElementById("preProcessing").style.display = "none";
 		document.getElementById("preProcessingUnstructured").style.display = "";
+
+		// toggle data modelling operations tab
 		document.getElementById("mining").style.display = "none";
 		document.getElementById("miningUnstructured").style.display = "";
-		document.getElementById("workflow3").style.display = "none";
-		document.getElementById("workflow").style.display = "";
+
+		// toggle workflow tabs only if user is logged in
+		if (username != "") {
+			document.getElementById("workflow3").style.display = "none";
+			document.getElementById("workflow").style.display = "";
+		}
+
 		// change from tabs that won't be visible in structured file view
-		if (this.state.currentDisplay=="csvUpload" || this.state.currentDisplay=="transformation") {
+		if (this.state.currentDisplay=="csvUpload" || this.state.currentDisplay=="transformation" ||
+		this.state.currentDisplay=="visualization") {
 			this.changeButtonColorAndChangeDisplay("uploadUnstructured");
+		} else if (this.state.currentDisplay=="displayContent") {
+			this.changeButtonColorAndChangeDisplay("displayUnstructured");
 		} else if (this.state.currentDisplay=="preProcessing") {
 			this.changeButtonColorAndChangeDisplay("preProcessingUnstructured");
 		} else if (this.state.currentDisplay=="mining") {
@@ -179,7 +227,7 @@ class Items extends Component {
           Upload Structured File
         </div>
 
-        <div id="displayContent"
+		  <div id="displayUnstructured"
           style={{
             backgroundColor: "#3b5998",
             width: "100%",
@@ -189,6 +237,23 @@ class Items extends Component {
             color: "white",
             paddingTop: "5px",
             paddingBottom: "5px"
+          }}
+          onClick={e => this.changeButtonColorAndChangeDisplay("displayUnstructured")}
+        >
+          Display Upload Result
+        </div>
+
+        <div id="displayContent"
+          style={{
+            backgroundColor: "#3b5998",
+            width: "100%",
+            marginBottom: "20px",
+            cursor: "pointer",
+            textAlign: "center",
+            color: "white",
+            paddingTop: "5px",
+            paddingBottom: "5px",
+			display: "none"
           }}
           onClick={e => this.changeButtonColorAndChangeDisplay("displayContent")}
         >
@@ -238,7 +303,8 @@ class Items extends Component {
             textAlign: "center",
             color: "white",
             paddingTop: "5px",
-            paddingBottom: "5px"
+            paddingBottom: "5px",
+			display: "none"
           }}
           onClick={e => this.changeButtonColorAndChangeDisplay("visualization")}
         >
@@ -304,7 +370,8 @@ class Items extends Component {
             textAlign: "center",
             color: "white",
             paddingTop: "5px",
-            paddingBottom: "5px"
+            paddingBottom: "5px",
+			display: "none"
           }}
           onClick={e => this.changeButtonColorAndChangeDisplay("workflow")}
         >

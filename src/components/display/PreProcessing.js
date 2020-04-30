@@ -197,21 +197,6 @@ class PreProcessing extends Component {
           <br />
           <br />
 
-          <div>
-            <table border="1px solid black">
-              <tr style={{ fontWeight: "bold" }}>
-                <td>key</td>
-                <td>Value</td>
-              </tr>
-              {this.state.table.map((item, key) => (
-                <tr>
-                  <td>{item.key}</td>
-                  <td>{item.value}</td>
-                </tr>
-              ))}
-            </table>
-          </div>
-
           <div class="box3">
             <h3>
               <u>Cleaning Process</u>
