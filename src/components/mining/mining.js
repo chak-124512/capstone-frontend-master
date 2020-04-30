@@ -420,7 +420,7 @@ class Mining extends Component {
             </Col>
 			
 			<Col>
-						<div id="allCols" class="column-box2">
+						<div id="allCols" class="column-box2" style={{display:"none"}}>
 										<h5>Select columns</h5>
 
               {cols.map((item, key) => (

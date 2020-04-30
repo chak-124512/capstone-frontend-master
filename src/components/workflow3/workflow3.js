@@ -193,6 +193,7 @@ import renderIf from "render-if";
 						var texts = data.texts;
 						var colors = data.colors;
 						var locs = data.locs;
+						ls.set("workflow_token", data.filename);
 						var i;
 						var linkKey = -1
 						const nodeDataArray = [];
@@ -359,6 +360,7 @@ import renderIf from "render-if";
 			data.append("workflow", "Yes");
 			data.append("username", ls.get("username"));
 			data.append("workflow_name", workflow_name);
+			data.append("type", "s");
 			// this.props.getData(uploadTest);
 			// this.props.changeDisplay();
 			console.log(files);
@@ -389,6 +391,7 @@ import renderIf from "render-if";
 		const data = new FormData();
 		data.append("username", ls.get("username"));
 		data.append("workflow_name", workflow_name);
+		data.append("type", "s");
 		data.append("filename", filename);
 		data.append("key", document.getElementById("key").innerText);
 		const data_url = `${baseUrl}/static/data-file/`;
@@ -912,7 +915,17 @@ import renderIf from "render-if";
 			<div class="box">
 				Data Preprocessing
 				<p></p>
-				<Button onClick={() => this.addNodeToDiagram("Structured Data Preprocessing")}>Structured Data Preprocessing</Button>				
+				<Button onClick={() => this.addNodeToDiagram("Remove Missing Values")}>Remove Missing Values</Button>				
+				<p></p>
+				<Button onClick={() => this.addNodeToDiagram("Remove Outside of Range")}>Remove Outside of Range</Button>				
+				<p></p>
+				<Button onClick={() => this.addNodeToDiagram("Replace NAN By Specific Value")}>Replace NAN By Specific Value</Button>				
+				<p></p>
+				<Button onClick={() => this.addNodeToDiagram("Replace Specific Value")}>Replace Specific Value</Button>				
+				<p></p>
+				<Button onClick={() => this.addNodeToDiagram("Replace Missing Values by Mean")}>Replace Missing Values by Mean</Button>				
+				<p></p>
+				<Button onClick={() => this.addNodeToDiagram("Replace Missing Values by Median")}>Replace Missing Values by Median</Button>				
 				<p></p>
 			</div>
 
@@ -1032,7 +1045,7 @@ import renderIf from "render-if";
             align: "center",
             marginLeft: "80%",
             marginTop: "10px",
-			display: "none"}} id="Structured Data Preprocessing">
+			display: "none"}} id="Replace Missing Values by Median">
 			<div>
             <span
               style={{
@@ -1041,9 +1054,333 @@ import renderIf from "render-if";
                 top: "10px"
               }}
             >
-			<Button onClick={() => this.getColumns()}>
-					  Display all columns for Select Option
-				</Button>
+              <b>Select Column: </b>{" "}
+              <select onChange={e => this.statsByColumns(e)}>
+                <option>--Select--</option>
+                {this.state.columns.map((item, key) => (
+                  <option>{item}</option>
+                ))}
+              </select>
+            </span>
+          </div>
+          <br />
+          <br />
+
+          <div class="box4">
+            <h3>
+              <u>Cleaning Process</u>
+            </h3>
+            <table>
+              <tr>
+                <td>Replace Missing Values by Median</td>
+				</tr>
+              <tr>
+                <td>
+                  <Button
+                    onClick={() =>
+                      this.sendReplaceByMeanMedian("replace-by-median")
+                    }
+                  >
+                    Submit
+                  </Button>
+                </td>
+				</tr>
+              <tr>
+                <Button onClick={() => this.getData("remove-range")}>
+                  Help!
+                </Button>
+              </tr>
+            </table>
+          </div>
+		
+				
+			</div>
+
+			<div style={{
+            align: "center",
+            marginLeft: "80%",
+            marginTop: "10px",
+			display: "none"}} id="Replace Missing Values by Mean">
+			<div>
+            <span
+              style={{
+                position: "relative",
+                left: "30%",
+                top: "10px"
+              }}
+            >
+		
+              <b>Select Column: </b>{" "}
+              <select onChange={e => this.statsByColumns(e)}>
+                <option>--Select--</option>
+                {this.state.columns.map((item, key) => (
+                  <option>{item}</option>
+                ))}
+              </select>
+            </span>
+          </div>
+          <br />
+          <br />
+
+          <div class="box4">
+            <h3>
+              <u>Cleaning Process</u>
+            </h3>
+            <table>
+              <tr>
+                <td>Replace Missing Values by Mean</td>
+			 </tr>
+              <tr>
+                <td>
+                  <Button
+                    onClick={() =>
+                      this.sendReplaceByMeanMedian("replace-by-mean")
+                    }
+                  >
+                    Submit
+                  </Button>
+                </td>
+				</tr>
+              <tr>
+                <Button onClick={() => this.getData("remove-range")}>
+                  Help!
+                </Button>
+              </tr>
+            </table>
+          </div>
+		
+				
+			</div>
+
+			<div style={{
+            align: "center",
+            marginLeft: "80%",
+            marginTop: "10px",
+			display: "none"}} id="Replace Specific Value">
+			<div>
+            <span
+              style={{
+                position: "relative",
+                left: "30%",
+                top: "10px"
+              }}
+            >
+		
+              <b>Select Column: </b>{" "}
+              <select onChange={e => this.statsByColumns(e)}>
+                <option>--Select--</option>
+                {this.state.columns.map((item, key) => (
+                  <option>{item}</option>
+                ))}
+              </select>
+            </span>
+          </div>
+          <br />
+          <br />
+
+          <div class="box4">
+            <h3>
+              <u>Cleaning Process</u>
+            </h3>
+            <table>
+              <tr>
+                <td>Replace Specific Value</td>
+			  </tr>
+              <tr>
+                <td>
+                  <input
+                    type="text"
+                    placeholder="Old Value"
+                    style={{ width: "90px" }}
+                    onChange={e =>
+                      this.setState({ replaceOldValue: e.target.value })
+                    }
+                  />{" "}
+				</td>
+               </tr>
+              <tr>
+			  <td>
+                  <input
+                    type="text"
+                    placeholder="New Value"
+                    style={{ width: "90px" }}
+                    onChange={e =>
+                      this.setState({ replaceNewValue: e.target.value })
+                    }
+                  />{" "}
+                </td>
+			</tr>
+              <tr>
+                <td>
+                  <Button onClick={() => this.sendNewSpecificValue()}>
+                    Submit
+                  </Button>
+                </td>
+				</tr>
+              <tr>
+                <Button onClick={() => this.getData("remove-range")}>
+                  Help!
+                </Button>
+              </tr>
+            </table>
+          </div>
+		
+				
+			</div>
+
+			<div style={{
+            align: "center",
+            marginLeft: "80%",
+            marginTop: "10px",
+			display: "none"}} id="Replace NAN By Specific Value">
+			<div>
+            <span
+              style={{
+                position: "relative",
+                left: "30%",
+                top: "10px"
+              }}
+            >
+              <b>Select Column: </b>{" "}
+              <select onChange={e => this.statsByColumns(e)}>
+                <option>--Select--</option>
+                {this.state.columns.map((item, key) => (
+                  <option>{item}</option>
+                ))}
+              </select>
+            </span>
+          </div>
+          <br />
+          <br />
+
+          <div class="box4">
+            <h3>
+              <u>Cleaning Process</u>
+            </h3>
+            <table>
+				<tr>
+                <td>Replace NAN By Specific Value</td>
+			 </tr>
+			 <tr>
+                <td style={{ width: 200 }}>
+                  <input
+                    type="text"
+                    placeholder={this.state.replaceSpecificValue}
+                    style={{ width: "190px" }}
+                    onChange={e =>
+                      this.setState({ replaceSpecificValue: e.target.value })
+                    }
+                  />{" "}
+                </td>
+			</tr>
+			<tr>
+                <td>
+                  <Button onClick={() => this.sendSpecificValue()}>
+                    Submit
+                  </Button>
+                </td>
+			</tr>
+			<tr>
+                <input
+                  type="button"
+                  value="Help!"
+                  onClick={() => this.getData("replace-nan")}
+                />
+              </tr>
+            </table>
+          </div>
+		
+				
+			</div>
+
+			<div style={{
+            align: "center",
+            marginLeft: "80%",
+            marginTop: "10px",
+			display: "none"}} id="Remove Outside of Range">
+			<div>
+            <span
+              style={{
+                position: "relative",
+                left: "30%",
+                top: "10px"
+              }}
+            >
+              <b>Select Column: </b>{" "}
+              <select onChange={e => this.statsByColumns(e)}>
+                <option>--Select--</option>
+                {this.state.columns.map((item, key) => (
+                  <option>{item}</option>
+                ))}
+              </select>
+            </span>
+          </div>
+          <br />
+          <br />
+
+          <div class="box4">
+            <h3>
+              <u>Cleaning Process</u>
+            </h3>
+            <table>
+              <tr>
+                <td>Remove Outside of Range</td>
+			  </tr>
+			  <tr>
+                <td style={{ width: 200 }}>
+                  <input
+                    type="text"
+                    placeholder={this.state.removeRangeMinValue}
+                    style={{ width: "90px" }}
+                    onChange={e =>
+                      this.setState({ removeRangeMinValue: e.target.value })
+                    }
+                  />{" "}
+				  </td>
+              </tr>
+			  <tr>
+				<td>
+                  <input
+                    type="text"
+                    placeholder={this.state.removeRangeMaxValue}
+                    style={{ width: "90px" }}
+                    onChange={e =>
+                      this.setState({ removeRangeMaxValue: e.target.value })
+                    }
+                  />
+                </td>
+				</tr>
+				<tr>
+                <td>
+                  <Button onClick={() => this.sendRemoveRange()}>Submit</Button>
+                </td>
+				</tr>
+				<tr>
+                <input
+                  type="button"
+                  value="Help!"
+                  onClick={() => this.getData("remove-range")}
+                />
+              </tr>
+            </table>
+          </div>
+		
+				
+			</div>
+
+			<div style={{
+            align: "center",
+            marginLeft: "80%",
+            marginTop: "10px",
+			display: "none"}} id="Remove Missing Values">
+			<div>
+            <span
+              style={{
+                position: "relative",
+                left: "30%",
+                top: "10px"
+              }}
+            >
               <b>Select Column: </b>{" "}
               <select onChange={e => this.statsByColumns(e)}>
                 <option>--Select--</option>
@@ -1088,196 +1425,13 @@ import renderIf from "render-if";
                   onClick={() => this.getData("remove-missing")}
                 />
               </tr>
-              <tr>
-			  </tr>
-              <tr>
-                <td>Remove Outside of Range</td>
-			  </tr>
-			  <tr>
-                <td style={{ width: 200 }}>
-                  <input
-                    type="text"
-                    placeholder={this.state.removeRangeMinValue}
-                    style={{ width: "90px" }}
-                    onChange={e =>
-                      this.setState({ removeRangeMinValue: e.target.value })
-                    }
-                  />{" "}
-				  </td>
-              </tr>
-			  <tr>
-				<td>
-                  <input
-                    type="text"
-                    placeholder={this.state.removeRangeMaxValue}
-                    style={{ width: "90px" }}
-                    onChange={e =>
-                      this.setState({ removeRangeMaxValue: e.target.value })
-                    }
-                  />
-                </td>
-				</tr>
-				<tr>
-                <td>
-                  <Button onClick={() => this.sendRemoveRange()}>Submit</Button>
-                </td>
-				</tr>
-				<tr>
-                <input
-                  type="button"
-                  value="Help!"
-                  onClick={() => this.getData("remove-range")}
-                />
-              </tr>
-              <tr>
-			  </tr>
-				<tr>
-                <td>Replace NAN By Specific Value</td>
-			 </tr>
-			 <tr>
-                <td style={{ width: 200 }}>
-                  <input
-                    type="text"
-                    placeholder={this.state.replaceSpecificValue}
-                    style={{ width: "190px" }}
-                    onChange={e =>
-                      this.setState({ replaceSpecificValue: e.target.value })
-                    }
-                  />{" "}
-                </td>
-			</tr>
-			<tr>
-                <td>
-                  <Button onClick={() => this.sendSpecificValue()}>
-                    Submit
-                  </Button>
-                </td>
-			</tr>
-			<tr>
-                <input
-                  type="button"
-                  value="Help!"
-                  onClick={() => this.getData("replace-nan")}
-                />
-              </tr>
-              <tr>
-			  </tr>
-              <tr>
-                <td>Replace Specific Value</td>
-			  </tr>
-              <tr>
-                <td>
-                  <input
-                    type="text"
-                    placeholder="Old Value"
-                    style={{ width: "90px" }}
-                    onChange={e =>
-                      this.setState({ replaceOldValue: e.target.value })
-                    }
-                  />{" "}
-				</td>
-               </tr>
-              <tr>
-			  <td>
-                  <input
-                    type="text"
-                    placeholder="New Value"
-                    style={{ width: "90px" }}
-                    onChange={e =>
-                      this.setState({ replaceNewValue: e.target.value })
-                    }
-                  />{" "}
-                </td>
-			</tr>
-              <tr>
-                <td>
-                  <Button onClick={() => this.sendNewSpecificValue()}>
-                    Submit
-                  </Button>
-                </td>
-				</tr>
-              <tr>
-                <Button onClick={() => this.getData("remove-range")}>
-                  Help!
-                </Button>
-              </tr>
-              <tr>
-			   </tr>
-              <tr>
-                <td>Replace Missing Values by Mean</td>
-			 </tr>
-              <tr>
-                <td>
-                  <Button
-                    onClick={() =>
-                      this.sendReplaceByMeanMedian("replace-by-mean")
-                    }
-                  >
-                    Submit
-                  </Button>
-                </td>
-				</tr>
-              <tr>
-                <Button onClick={() => this.getData("remove-range")}>
-                  Help!
-                </Button>
-              </tr>
-              <tr>
-			   </tr>
-              <tr>
-                <td>Replace Missing Values by Median</td>
-				</tr>
-              <tr>
-                <td>
-                  <Button
-                    onClick={() =>
-                      this.sendReplaceByMeanMedian("replace-by-median")
-                    }
-                  >
-                    Submit
-                  </Button>
-                </td>
-				</tr>
-              <tr>
-                <Button onClick={() => this.getData("remove-range")}>
-                  Help!
-                </Button>
-              </tr>
             </table>
           </div>
-			
+		
 				
 			</div>
 
-			<div style={{
-            align: "center",
-            marginLeft: "80%",
-            marginTop: "10px",
-			display: "none"}} id="allCols">
-			<div class="column-box2">
-				<h5>Select columns</h5>
-				<Row style={{ paddingLeft: 10, paddingTop: 10 }}>
-				  {this.state.columns.map((item, key) => (
-					<Col key={key} md="8">
-					  <Row>
-						<Col>
-						  <label>{item}</label>
-						</Col>
-						<Col>
-						  <input
-							type="checkbox"
-							value={item}
-							onChange={e => {
-							  this.updateCheck(e, key);
-							}}
-						  />
-						</Col>
-					  </Row>
-					</Col>
-				  ))}
-				</Row>
-			</div>
-		</div>
+			
 
 			<div style={{
             align: "center",
@@ -1587,6 +1741,35 @@ import renderIf from "render-if";
 
 			</div>
 
+			<div style={{
+            align: "center",
+            marginLeft: "80%",
+            marginTop: "10px",
+			display: "none"}} id="allCols">
+			<div class="column-box2">
+				<h5>Select columns</h5>
+				<Row style={{ paddingLeft: 10, paddingTop: 10 }}>
+				  {this.state.columns.map((item, key) => (
+					<Col key={key} md="8">
+					  <Row>
+						<Col>
+						  <label>{item}</label>
+						</Col>
+						<Col>
+						  <input
+							type="checkbox"
+							value={item}
+							onChange={e => {
+							  this.updateCheck(e, key);
+							}}
+						  />
+						</Col>
+					  </Row>
+					</Col>
+				  ))}
+				</Row>
+			</div>
+		</div>
 
 
 			</Col>

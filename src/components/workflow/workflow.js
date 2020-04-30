@@ -117,9 +117,11 @@ import renderIf from "render-if";
 			document.getElementById(part.data.text).style.display = "";
 			if (part.data.text=="Display Data") {
 				document.getElementById("key").innerHTML = part.data.key;
-			}
+			} 
 			if (part.data.text=="Remove Selected Words" || part.data.text=="Topic Modeling" || part.data.text=="Word Embedding") {
 				document.getElementById("allCols").style.display = "";
+			} else {
+				document.getElementById("allCols").style.display = "none";
 			}
 		}
       });
@@ -170,6 +172,7 @@ import renderIf from "render-if";
 						var texts = data.texts;
 						var colors = data.colors;
 						var locs = data.locs;
+						ls.set("u_workflow_token", data.filename);
 						var i;
 						var linkKey = -1
 						const nodeDataArray = [];
@@ -340,6 +343,10 @@ import renderIf from "render-if";
 		data.append("lemmatization", lemmatization);
 		data.append("parsingType", parsingType);
 		data.append("topics", topics);
+		data.append("workflow", "Yes");
+		data.append("username", ls.get("username"));
+		data.append("workflow_name", this.state.workflow_name);
+		data.append("type", "s");
 
 		// this.props.getData(uploadTest);
 		// this.props.changeDisplay();
@@ -404,6 +411,7 @@ import renderIf from "render-if";
 		data.append("username", ls.get("username"));
 		data.append("workflow_name", workflow_name);
 		data.append("filename", filename);
+		data.append("type", "u");
 		data.append("key", document.getElementById("key").innerText);
 		const data_url = `${baseUrl}/static/data-file/`;
 		fetch(`${baseUrl}/displayDataWorkflow`, {
@@ -599,7 +607,7 @@ import renderIf from "render-if";
               <div key={index}>
                 <img
                   style={{ width: 550, height: 550 }}
-                  src={`${baseUrl}/static/` + url}
+                  src={`${baseUrl}/static/word-embedding/` + url}
                 />{" "}
                 <br />
                 <br />

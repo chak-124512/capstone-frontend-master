@@ -37,7 +37,7 @@ class Items extends Component {
   };
 
   logout = () => {
-  // logout- clear username from local storage
+  // logout- clear username and saved tokens from local storage
 	ls.remove("username");
 	window.location.reload(false);
 

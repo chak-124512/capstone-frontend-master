@@ -356,7 +356,7 @@ class Mining2 extends Component {
 			 {this.state.images
           ? this.state.images.map((url, index) => (
               <div>
-                <img src={`${baseUrl}/static/` + url}></img>
+                <img src={`${baseUrl}/static/word-embedding/` + url}></img>
               </div>
             ))
           : null}
